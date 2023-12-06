@@ -1,7 +1,7 @@
 {
   // Linter Settings
-  "typescript.validate.enable": false,
-  "javascript.validate.enable": false,
+  "typescript.validate.enable": true,
+  "javascript.validate.enable": true,
   "eslint.validate": ["typescript", "typescriptreact"],
   "eslint.workingDirectories": ["./src"],
   "editor.codeActionsOnSave": { "source.fixAll.eslint": true },

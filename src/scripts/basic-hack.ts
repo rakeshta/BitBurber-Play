@@ -6,15 +6,17 @@ export async function main(ns: NS): Promise<void> {
   ns.disableLog('ALL');
 
   /**
-   * @param {number} amount the number to format
-   * @returns {string} formatted amount
+   * Formats the given amount.
+   *
+   * @param amount the number to format
+   * @returns formatted amount
    */
-  function formatAmount(amount) {
+  function formatAmount(amount: number) {
     return ns.formatNumber(amount, 2);
   }
 
   // hostname
-  const host = ns.args.length > 0 ? ns.args[0] : ns.getHostname();
+  const host = ns.args.length > 0 ? `${ns.args[0]}` : ns.getHostname();
   ns.print(`Starting on host: ${host}`);
   ns.setTitle(`Basic hack: ${host}`);
 
