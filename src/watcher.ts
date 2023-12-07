@@ -1,4 +1,5 @@
 import { NS } from '@ns';
+
 import { init } from '/scripts/lib/util';
 
 /** Utility to restart a running script when it's updated. */

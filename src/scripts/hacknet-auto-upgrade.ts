@@ -1,9 +1,9 @@
 import { NS } from '@ns';
 import { createLoggers } from '/scripts/lib/log';
 
-const MAX_NODES = 20;
+const MAX_NODES = 25;
 const MAX_LEVEL = 200;
-const MAX_RAM = 32;
+const MAX_RAM = 64;
 const MAX_CORES = 10;
 
 const LOOP_WAIT = 1000;
