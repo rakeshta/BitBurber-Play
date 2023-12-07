@@ -41,6 +41,7 @@ const levelStyles = {
 
 export type LogLevel = keyof typeof levelStyles;
 export type Logger = (...args: unknown[]) => void;
+export type LevelLoggers = { [level in LogLevel]: Logger };
 
 /** wraps a NS logger */
 const wrapLogger =
@@ -52,7 +53,7 @@ const wrapLogger =
 const levelWrappers = (logger: Logger) =>
   Object.keys(levelStyles).reduce(
     (acc, level) => ({ ...acc, [level]: wrapLogger(level as LogLevel, logger) }),
-    {} as Record<LogLevel, Logger>
+    {} as LevelLoggers
   );
 
 /** Creates level loggers for the terminal and console (tail). */
