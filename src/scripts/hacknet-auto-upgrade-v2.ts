@@ -124,7 +124,7 @@ export async function main(ns: NS): Promise<void> {
         isWaitNotified = true;
       }
 
-      await ns.sleep(MONEY_WAIT);
+      await ns.asleep(MONEY_WAIT);
     }
 
     // execute upgrade
@@ -132,6 +132,6 @@ export async function main(ns: NS): Promise<void> {
     cheapestUpgrade.execute();
 
     // delay to ensure UI responsiveness
-    await ns.sleep(LOOP_WAIT);
+    await ns.asleep(LOOP_WAIT);
   }
 }
