@@ -1,4 +1,5 @@
 import { NS } from '@ns';
+
 import { LevelLoggers, createLoggers } from '/scripts/lib/log';
 
 declare global {
@@ -20,11 +21,14 @@ declare global {
 export function init(ns: NS): void {
   ns.disableLog('ALL');
 
-  window.ns = ns;
+  // accessing window directly incurs 25GB memory penalty
+  const cheatyWindow = eval('window') as Window & typeof globalThis;
+
+  cheatyWindow.ns = ns;
 
   const { term, log } = createLoggers(ns);
-  window.term = term;
-  window.log = log;
+  cheatyWindow.term = term;
+  cheatyWindow.log = log;
 }
 
 /**
