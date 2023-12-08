@@ -38,5 +38,5 @@ export function init(ns: NS): void {
  * @returns formatted amount
  */
 export function formatAmount(amount: number): string {
-  return ns.formatNumber(amount, 2);
+  return '$' + ns.formatNumber(amount, 2);
 }

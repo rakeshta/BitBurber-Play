@@ -120,7 +120,7 @@ export async function main(ns: NS): Promise<void> {
     let isWaitNotified = false;
     while (cheapestUpgrade.cost > ns.getServerMoneyAvailable('home')) {
       if (!isWaitNotified) {
-        term.info(`Next upgrade: ${cheapestUpgrade.description} for $${formatAmount(cheapestUpgrade.cost)}`);
+        term.info(`Next upgrade: ${cheapestUpgrade.description} for ${formatAmount(cheapestUpgrade.cost)}`);
         isWaitNotified = true;
       }
 
@@ -128,7 +128,7 @@ export async function main(ns: NS): Promise<void> {
     }
 
     // execute upgrade
-    term.info(`Executing upgrade: ${cheapestUpgrade.description} for $${formatAmount(cheapestUpgrade.cost)}`);
+    term.info(`Executing upgrade: ${cheapestUpgrade.description} for ${formatAmount(cheapestUpgrade.cost)}`);
     cheapestUpgrade.execute();
 
     // delay to ensure UI responsiveness
