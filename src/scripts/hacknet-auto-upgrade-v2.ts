@@ -30,27 +30,30 @@ function findNodeUpgrades(i: number): Upgrade[] {
   const descPrefix = `Node #${i + 1} / `;
 
   // upgrade level
-  if (stats.level < MAX_LEVEL) {
+  const levelUpCost = ns.hacknet.getLevelUpgradeCost(i);
+  if (stats.level < MAX_LEVEL && levelUpCost < Infinity) {
     upgrades.push({
-      cost: ns.hacknet.getLevelUpgradeCost(i),
+      cost: levelUpCost,
       description: descPrefix + `level ${stats.level} -> ${stats.level + 1}`,
       execute: () => ns.hacknet.upgradeLevel(i),
     });
   }
 
   // upgrade ram
-  if (stats.ram < MAX_RAM) {
+  const ramUpCost = ns.hacknet.getRamUpgradeCost(i);
+  if (stats.ram < MAX_RAM && ramUpCost < Infinity) {
     upgrades.push({
-      cost: ns.hacknet.getRamUpgradeCost(i),
+      cost: ramUpCost,
       description: descPrefix + `RAM ${stats.ram}GB -> ${stats.ram * 2}GB`,
       execute: () => ns.hacknet.upgradeRam(i),
     });
   }
 
   // upgrade cores
-  if (stats.cores < MAX_CORES) {
+  const coreUpCost = ns.hacknet.getCoreUpgradeCost(i);
+  if (stats.cores < MAX_CORES && coreUpCost < Infinity) {
     upgrades.push({
-      cost: ns.hacknet.getCoreUpgradeCost(i),
+      cost: coreUpCost,
       description: descPrefix + `cores ${stats.cores} -> ${stats.cores + 1}`,
       execute: () => ns.hacknet.upgradeCore(i),
     });
