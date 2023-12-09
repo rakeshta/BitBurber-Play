@@ -26,5 +26,6 @@
   "bitburner.authToken": "7NsmB7pPsb/BgGAr45w2XJNy0mJdeeuY2UT/Oyz18c/xOKxpS1ORq71gEQE/Udpb",
   "bitburner.fileWatcher.enable": true,
   "bitburner.showFileWatcherEnabledNotification": true,
-  "bitburner.showPushSuccessNotification": true
+  "bitburner.showPushSuccessNotification": true,
+  "cSpell.words": ["clsx"]
 }
