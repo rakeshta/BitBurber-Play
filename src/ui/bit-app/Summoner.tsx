@@ -9,8 +9,8 @@ export interface Props {
 export function Summoner({ isShowingApp, onToggleShowApp }: Props) {
   return (
     <div className='bui-w-full bui-flex bui-items-center bui-justify-center'>
-      <button className='bui-m-4 bui-button bui-medium' style={{ width: '12rem' }} onClick={onToggleShowApp}>
-        {isShowingApp ? 'Hide Bit App' : 'Show Bit App'}
+      <button className='bui-m-4 bui-button bui-small' style={{ width: '8rem' }} onClick={onToggleShowApp}>
+        {isShowingApp ? 'Hide Bit App' : 'Bit App'}
       </button>
     </div>
   );

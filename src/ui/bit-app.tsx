@@ -58,7 +58,7 @@ function BitUiRoot() {
 
   return (
     <>
-      <BitUiMainPortal isShow={isShow} />
+      <BitUiMainPortal isShow={isShow} onClose={() => setIsShow(false)} />
       <Style />
       <Summoner isShowingApp={isShow} onToggleShowApp={() => setIsShow((value) => !value)} />
     </>
@@ -66,6 +66,18 @@ function BitUiRoot() {
 }
 
 /** Portal to render the main UI. */
-function BitUiMainPortal({ isShow }: { isShow: boolean }) {
-  return ReactDOM.createPortal(<Main isShow={isShow} />, cheatyDocument.getElementById(APP_CONTAINER_ID)!);
+function BitUiMainPortal({ isShow, onClose }: { isShow: boolean; onClose: () => void }) {
+  const containerEl = React.useMemo(() => cheatyDocument.getElementById(APP_CONTAINER_ID)!, []);
+
+  // toggle class on container when showing
+  React.useEffect(() => {
+    if (isShow) {
+      containerEl.classList.add('bui-on');
+    } else {
+      containerEl.classList.remove('bui-on');
+    }
+  }, [isShow]);
+
+  // mount main UI on the container
+  return ReactDOM.createPortal(<Main isShow={isShow} onClose={onClose} />, containerEl);
 }

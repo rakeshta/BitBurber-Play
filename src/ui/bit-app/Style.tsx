@@ -15,6 +15,11 @@ const style = [
     --bui-color-text: #cccccc;
     --bui-color-text-reverse: #101010;
     --bui-color-background: #101010;
+    --bui-color-gray: #808080;
+    --bui-color-gray-darker: #424242;
+    --bui-color-gray-darkest: #212121;
+    --bui-color-gray-lighter: #a0a0a0;
+    --bui-color-gray-lightest: #d5d5d5;
   }
   `,
 
@@ -23,7 +28,7 @@ const style = [
   .bui-w-full {
     width: 100%;
   }
-  .bui-flex {
+  .bui-flex, .bui-flex-row, .bui-flex-col {
     display: flex;
   }
   .bui-flex-row {
@@ -59,6 +64,17 @@ const style = [
   .bui-bg-text { background-color: var(--bui-color-text); }
   .bui-bg-text-reverse { background-color: var(--bui-color-text-reverse); }
   .bui-bg-background { background-color: var(--bui-color-background); }
+  `,
+
+  // borders
+  `
+  .bui-border-debug { border: 1px solid #ff00ff; }
+  .bui-border { border: 1px solid var(--bui-color-gray); }
+  .bui-border-t { border-top: 1px solid var(--bui-color-gray); }
+  .bui-border-r { border-right: 1px solid var(--bui-color-gray); }
+  .bui-border-b { border-bottom: 1px solid var(--bui-color-gray); }
+  .bui-border-l { border-left: 1px solid var(--bui-color-gray); }
+  .bui-border-primary { border-color: var(--bui-color-primary); }
   `,
 
   // spacing
@@ -105,6 +121,12 @@ const style = [
   .bui-button:active {
     background-color: var(--bui-color-primary-darker);
   }
+  .bui-button.bui-small {
+    font-size: 1rem;
+    min-width: 8rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: ${SPACING}rem;
+  }
   .bui-button.bui-medium {
     font-size: 1.5rem;
     min-width: 10rem;
@@ -127,10 +149,12 @@ const style = [
     justify-content: stretch;
   }
   .bui-main-container.bui-on {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
+    pointer-events: initial;
   }
   .bui-main {
     display: flex;
+    flex-direction: column;
     flex: 1;
     margin: 10rem;
     background-color: var(--bui-color-background);
@@ -138,6 +162,30 @@ const style = [
     border-radius: ${SPACING * 2}rem;
     border: 1px solid var(--bui-color-primary);
     overflow: hidden;
+  }
+  .bui-main-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 0 ${SPACING * 4}rem;
+  }
+  .bui-main-body {
+    flex: 1;
+    overflow: auto;
+  }
+  `,
+
+  // widgets
+  `
+  .bui-close-button {
+    border: none;
+    background-color: transparent;
+    color: var(--bui-color-secondary);
+    cursor: pointer;
+    font-size: 1.5rem;
+    min-width: 44px;
+    min-height: 44px;
   }
   `,
 ];
