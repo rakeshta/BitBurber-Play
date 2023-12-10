@@ -25,7 +25,7 @@ export async function main(ns: NS): Promise<void> {
   // mount container for the main UI
   const div = document.createElement('div');
   div.setAttribute('id', APP_CONTAINER_ID);
-  div.setAttribute('class', 'bui-main-container');
+  div.setAttribute('class', 'bui bui-main-container');
   document.body.appendChild(div);
 
   // hack: ensure the overview container row covers the width of the panel
@@ -54,7 +54,7 @@ export async function main(ns: NS): Promise<void> {
 
 /** App root */
 function BitUiRoot() {
-  const [isShow, setIsShow] = React.useState(false);
+  const [isShow, setIsShow] = React.useState(true);
 
   return (
     <>

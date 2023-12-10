@@ -1,3 +1,4 @@
+import { TabManager } from '/ui/bit-app/tabs/TabManager';
 import { React } from '/ui/lib/react';
 import { CloseButton } from '/ui/widgets/CloseButton';
 
@@ -11,11 +12,14 @@ export function Main({ isShow, onClose }: Props) {
     <>
       {isShow && (
         <div className='bui-main'>
+          {/* header */}
           <div className='bui-main-header'>
             <h2 className='bui-my-2 flex-1 bui-fg-secondary'>Bit UI</h2>
             <CloseButton onClose={onClose} />
           </div>
-          <div className='bui-main-body'></div>
+          <div className='bui-main-body'>
+            <TabManager />
+          </div>
         </div>
       )}
     </>

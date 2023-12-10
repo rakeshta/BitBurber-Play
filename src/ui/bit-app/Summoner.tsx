@@ -8,9 +8,9 @@ export interface Props {
 /** Component to render a button in the overview panel to show & hide the main window. */
 export function Summoner({ isShowingApp, onToggleShowApp }: Props) {
   return (
-    <div className='bui-w-full bui-flex bui-items-center bui-justify-center'>
+    <div className='bui bui-summoner bui-w-full bui-flex bui-items-center bui-justify-center'>
       <button className='bui-m-4 bui-button bui-small' style={{ width: '8rem' }} onClick={onToggleShowApp}>
-        {isShowingApp ? 'Hide Bit App' : 'Bit App'}
+        {isShowingApp ? 'Hide Bit UI' : 'Bit UI'}
       </button>
     </div>
   );
