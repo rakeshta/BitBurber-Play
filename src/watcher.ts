@@ -1,10 +1,10 @@
 import { NS } from '@ns';
 
-import { init } from '/scripts/lib/util';
+import { context } from '/scripts/lib/context';
 
 /** Utility to restart a running script when it's updated. */
 export async function main(ns: NS): Promise<void> {
-  init(ns);
+  const { term } = context.init(ns);
 
   // collect hashes for all scripts in the home computer
   const hashes: Record<string, number> = {};
