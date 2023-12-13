@@ -96,7 +96,7 @@ export class Channel {
 /** A factory to create a channel manager. */
 export function channelManagerFactory(): ChannelManager {
   // list of channels
-  const channels = new Map<string, Channel>();
+  const channels = (window.__bit_channels = window.__bit_channels || new Map<string, Channel>());
 
   // utility get a channel with the given id or throw an error if it doesn't exist
   function getChannel(id: string): Channel {

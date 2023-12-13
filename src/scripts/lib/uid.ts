@@ -1,7 +1,7 @@
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
 /** All previously generated UIDs. */
-const uids = new Set<string>();
+const uids = (window.__bit_uids = window.__bit_uids || new Set<string>());
 
 /** Unique ID generator. */
 export const uid = {
