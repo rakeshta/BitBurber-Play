@@ -1,3 +1,4 @@
+/* Inspired by `clsx` package: https://www.npmjs.com/package/clsx */
 /* eslint-disable no-cond-assign */
 
 export type ClassValue = ClassArray | ClassDictionary | string | number | null | boolean | undefined;
