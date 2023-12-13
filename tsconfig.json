@@ -1,5 +1,5 @@
 {
-  "include": ["NetscriptDefinitions.d.ts", "global.d.ts", "src/**/*"],
+  "include": ["types/**/*", "src/**/*"],
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
@@ -19,7 +19,7 @@
     "baseUrl": "src/",
     "paths": {
       "/*": ["*"],
-      "@ns": ["../NetscriptDefinitions.d.ts"]
+      "@ns": ["../types/NetscriptDefinitions.d.ts"]
     }
   }
 }

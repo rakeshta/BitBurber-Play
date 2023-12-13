@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const url =
   'https://raw.githubusercontent.com/bitburner-official/bitburner-src/dev/src/ScriptEditor/NetscriptDefinitions.d.ts';
-const path = './NetscriptDefinitions.d.ts';
+const path = './types/NetscriptDefinitions.d.ts';
 
 https
   .get(url, (res) => {

@@ -27,5 +27,5 @@
   "bitburner.fileWatcher.enable": true,
   "bitburner.showFileWatcherEnabledNotification": true,
   "bitburner.showPushSuccessNotification": true,
-  "cSpell.words": ["clsx"]
+  "cSpell.words": ["clsx", "uids"]
 }
