@@ -1,7 +1,9 @@
+import { Context } from '/scripts/lib/context';
+
 /** Utilities to manage singleton processes. */
 export const singleton = {
   /** Takes over as the new singleton instance by killing previous instances. */
-  replace(): void {
+  replace({ ns, term }: Context): void {
     // iterate through running scripts and kill other instances
     let isNotified = false;
     const scriptName = ns.getScriptName();

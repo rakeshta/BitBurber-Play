@@ -1,8 +1,9 @@
 import { NS } from '@ns';
 
+import { context } from '/scripts/lib/context';
 import { singleton } from '/scripts/lib/singleton';
-import { init } from '/scripts/lib/util';
 
+import { AppContextProvider } from '/ui/bit-app/AppContext';
 import { Main } from '/ui/bit-app/Main';
 import { Style } from '/ui/bit-app/Style';
 import { Summoner } from '/ui/bit-app/Summoner';
@@ -14,10 +15,10 @@ const cheatyDocument = eval('document') as Document & typeof globalThis;
 
 /** Entrypoint for the BitUI app. */
 export async function main(ns: NS): Promise<void> {
-  init(ns);
+  const ctx = context.init(ns);
 
   // kill previous bit-ui instances
-  singleton.replace();
+  singleton.replace(ctx);
 
   // ensure containers from previous instances are removed
   document.querySelectorAll(`#${APP_CONTAINER_ID}`).forEach((el) => el.remove());
@@ -34,7 +35,9 @@ export async function main(ns: NS): Promise<void> {
   // render the UI
   ReactDOM.render(
     <React.StrictMode>
-      <BitUiRoot />
+      <AppContextProvider ctx={ctx}>
+        <BitUiRoot />
+      </AppContextProvider>
     </React.StrictMode>,
     cheatyDocument.getElementById('overview-extra-hook-0'),
   );
