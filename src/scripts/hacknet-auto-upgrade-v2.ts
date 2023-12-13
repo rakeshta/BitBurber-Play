@@ -1,6 +1,7 @@
 import { NS } from '@ns';
 
-import { formatAmount, init } from '/scripts/lib/util';
+import { Context, context } from '/scripts/lib/context';
+import { formatAmount } from '/scripts/lib/util';
 
 // constants -----------------------------------------------------------------------------------------------------------
 
@@ -23,7 +24,7 @@ type Upgrade = {
 // helpers -------------------------------------------------------------------------------------------------------------
 
 /** Finds upgrades for a node at the given index. */
-function findNodeUpgrades(i: number): Upgrade[] {
+function findNodeUpgrades({ ns }: Context, i: number): Upgrade[] {
   const upgrades: Upgrade[] = [];
 
   const stats = ns.hacknet.getNodeStats(i);
@@ -63,7 +64,7 @@ function findNodeUpgrades(i: number): Upgrade[] {
 }
 
 /** Finds a new hacknet node to purchase. */
-function findNodePurchase(): Upgrade | undefined {
+function findNodePurchase({ ns }: Context): Upgrade | undefined {
   // abort if we're at the max number of nodes
   const maxNodes = Math.min(ns.hacknet.maxNumNodes(), MAX_NODES);
   if (ns.hacknet.numNodes() >= maxNodes) {
@@ -82,7 +83,8 @@ function findNodePurchase(): Upgrade | undefined {
 
 /** Automatically buys and upgrades hacknet nodes. */
 export async function main(ns: NS): Promise<void> {
-  init(ns);
+  const ctx = context.init(ns);
+  const { term } = ctx;
 
   // repeatedly find cheapest upgrade and execute until there are no more upgrades left
   while (true) {
@@ -91,7 +93,7 @@ export async function main(ns: NS): Promise<void> {
     // find upgrades for already owned nodes
     for (let i = 0; i < ns.hacknet.numNodes(); i++) {
       // find node upgrades. if there are none, increment the staring index so we can skip this one next time
-      const nodeUpgrades = findNodeUpgrades(i);
+      const nodeUpgrades = findNodeUpgrades(ctx, i);
       if (nodeUpgrades.length == 0) {
         term.debug(`No upgrades for node #${i + 1}`);
         continue;
@@ -102,7 +104,7 @@ export async function main(ns: NS): Promise<void> {
     }
 
     // find next node purchase
-    const nodePurchase = findNodePurchase();
+    const nodePurchase = findNodePurchase(ctx);
     if (nodePurchase) {
       upgrades.push(nodePurchase);
     }
@@ -120,7 +122,7 @@ export async function main(ns: NS): Promise<void> {
     let isWaitNotified = false;
     while (cheapestUpgrade.cost > ns.getServerMoneyAvailable('home')) {
       if (!isWaitNotified) {
-        term.info(`Next upgrade: ${cheapestUpgrade.description} for ${formatAmount(cheapestUpgrade.cost)}`);
+        term.info(`Next upgrade: ${cheapestUpgrade.description} for ${formatAmount(ctx, cheapestUpgrade.cost)}`);
         isWaitNotified = true;
       }
 
@@ -128,7 +130,7 @@ export async function main(ns: NS): Promise<void> {
     }
 
     // execute upgrade
-    term.info(`Executing upgrade: ${cheapestUpgrade.description} for ${formatAmount(cheapestUpgrade.cost)}`);
+    term.info(`Executing upgrade: ${cheapestUpgrade.description} for ${formatAmount(ctx, cheapestUpgrade.cost)}`);
     cheapestUpgrade.execute();
 
     // delay to ensure UI responsiveness

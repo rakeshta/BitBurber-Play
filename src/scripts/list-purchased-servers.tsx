@@ -1,9 +1,9 @@
 import { NS } from '@ns';
 
-import { init } from '/scripts/lib/util';
+import { context } from '/scripts/lib/context';
 
 export async function main(ns: NS): Promise<void> {
-  init(ns);
+  const { term } = context.init(ns);
 
   // list purchased servers
   let output = `Purchased servers:\n`;

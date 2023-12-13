@@ -9,7 +9,7 @@
       "address": "127.0.0.1",
       "port": 9222,
       "request": "attach",
-      "type": "pwa-chrome",
+      "type": "chrome",
       "timeout": 15000,
       "webRoot": "${workspaceRoot}/src",
       "sourceMapPathOverrides": {

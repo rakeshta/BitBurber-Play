@@ -1,23 +1,16 @@
 import { NS } from '@ns';
 
-const MAX_ITER = 10;
+import { context } from '/scripts/lib/context';
+import { formatAmount } from '/scripts/lib/util';
 
 export async function main(ns: NS): Promise<void> {
-  ns.disableLog('ALL');
+  const ctx = context.init(ns);
+  const { log } = ctx;
 
-  /**
-   * Formats the given amount.
-   *
-   * @param amount the number to format
-   * @returns formatted amount
-   */
-  function formatAmount(amount: number) {
-    return ns.formatNumber(amount, 2);
-  }
-
-  // hostname
+  // hostname & thread count
   const host = ns.args.length > 0 ? `${ns.args[0]}` : ns.getHostname();
-  ns.print(`Starting on host: ${host}`);
+  const threads = ns.getRunningScript()?.threads ?? 1;
+  log.info(`Starting on host ${host}; threads: ${threads}`);
   ns.setTitle(`Basic hack: ${host}`);
 
   // hack limits
@@ -25,35 +18,27 @@ export async function main(ns: NS): Promise<void> {
   const minSecurity = ns.getServerMinSecurityLevel(host);
 
   // hack loop
-  let iterCounter = MAX_ITER;
   while (true) {
-    ns.print(`Loop: Host - ${host}. Current iter count - ${iterCounter}.`);
+    log.debug(`Loop: Host - ${host}`);
 
     // maximize money
     const availableMoney = ns.getServerMoneyAvailable(host);
-    ns.print(`Available money: ${formatAmount(availableMoney)}`);
-    if (availableMoney < maxMoney && iterCounter > 0) {
-      iterCounter--;
-      ns.print(`Growing money. Target ${formatAmount(maxMoney)}.`);
-      await ns.grow(host);
-      continue;
+    log.debug(`Available money: ${formatAmount(ctx, availableMoney)}`);
+    if (availableMoney < maxMoney) {
+      log.info(`Growing money. Target ${formatAmount(ctx, maxMoney)}.`);
+      await ns.grow(host, { threads });
     }
 
     // minimize security
     const security = ns.getServerSecurityLevel(host);
-    ns.print(`Current security: ${security}`);
-    if (security > minSecurity && iterCounter > 0) {
-      iterCounter--;
-      ns.print(`Weakening security. Target ${security}`);
-      await ns.weaken(host);
-      continue;
+    log.debug(`Current security: ${security}`);
+    if (security > minSecurity) {
+      log.info(`Weakening security. Target ${minSecurity}`);
+      await ns.weaken(host, { threads });
     }
 
     // hack
-    ns.print(`Hacking ${host}`);
-    await ns.hack(host);
-
-    // reset iteration counter
-    iterCounter = MAX_ITER;
+    log.info(`Hacking ${host}`);
+    await ns.hack(host, { threads });
   }
 }
