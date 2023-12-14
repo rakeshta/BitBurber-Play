@@ -1,3 +1,4 @@
+import { global } from '/scripts/lib/global';
 import { invariant } from '/scripts/lib/invariant';
 import { uid } from '/scripts/lib/uid';
 
@@ -96,7 +97,7 @@ export class Channel {
 /** A factory to create a channel manager. */
 export function channelManagerFactory(): ChannelManager {
   // list of channels
-  const channels = (window.__bit_channels = window.__bit_channels || new Map<string, Channel>());
+  const channels = (global.__bit_channels = global.__bit_channels || new Map<string, Channel>());
 
   // utility get a channel with the given id or throw an error if it doesn't exist
   function getChannel(id: string): Channel {

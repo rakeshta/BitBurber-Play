@@ -1,3 +1,4 @@
-const cheatyWindow = eval('window') as Window & typeof globalThis;
-export const React = cheatyWindow.React;
-export const ReactDOM = cheatyWindow.ReactDOM;
+import { global } from '/scripts/lib/global';
+
+export const React = global.React;
+export const ReactDOM = global.ReactDOM;

@@ -1,3 +1,5 @@
+import { global } from '/scripts/lib/global';
+
 import { clsx } from '/ui/lib/clsx';
 import { React } from '/ui/lib/react';
 
@@ -16,8 +18,8 @@ export function CloseButton({ className, isCloseOnEscape = true, onClose }: Prop
         }
       };
 
-      window.addEventListener('keydown', handler);
-      return () => window.removeEventListener('keydown', handler);
+      global.addEventListener('keydown', handler);
+      return () => global.removeEventListener('keydown', handler);
     }
 
     return;

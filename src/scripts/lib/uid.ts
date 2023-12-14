@@ -1,7 +1,9 @@
+import { global } from '/scripts/lib/global';
+
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 
 /** All previously generated UIDs. */
-const uids = (window.__bit_uids = window.__bit_uids || new Set<string>());
+const uids = (global.__bit_uids = global.__bit_uids || new Set<string>());
 
 /** Unique ID generator. */
 export const uid = {
