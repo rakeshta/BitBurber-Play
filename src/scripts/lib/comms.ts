@@ -4,14 +4,29 @@ import { uid } from '/scripts/lib/uid';
 
 // types ---------------------------------------------------------------------------------------------------------------
 
+/** Channel state */
+export type ChannelState = 'open' | 'closed';
+
 /** A message sent via a chanel. */
 export interface ChannelMessage {
   /** The data payload in the message. */
   data: unknown;
 }
 
-/** A listener to listen to messages on a channel. */
-export type ChannelListener = (message: ChannelMessage) => void;
+/** Listener type for channel message event. */
+export type ChannelMessageListener = (message: ChannelMessage) => void;
+
+/** Listener type for channel close event. */
+export type ChannelCloseListener = () => void;
+
+/** Listener types by channel event type. */
+export interface ChannelListeners {
+  message: ChannelMessageListener;
+  close: ChannelCloseListener;
+}
+
+/** Possible events on a channel */
+export type ChannelEventType = keyof ChannelListeners;
 
 /** An interface to interact with channels. */
 export interface ChannelManager {
@@ -30,6 +45,32 @@ export interface ChannelManager {
   destroy(id: string): void;
 
   /**
+   * Tests if the channel with the given id is open.
+   *
+   * @param id The id of the channel to test.
+   * @returns `true` if the channel is open.
+   */
+  isOpen(id: string): boolean;
+
+  /**
+   * Subscribe to events on a channel.
+   *
+   * @param id The id of the channel to subscribe to
+   * @param type The type of event to subscribe to
+   * @param listener The listener to subscribe with
+   */
+  on<Type extends ChannelEventType>(id: string, type: Type, listener: ChannelListeners[Type]): void;
+
+  /**
+   * Unsubscribe from events on a channel.
+   *
+   * @param id The id of the channel to unsubscribe from
+   * @param type The type of event to unsubscribe from
+   * @param listener The listener to unsubscribe
+   */
+  off<Type extends ChannelEventType>(id: string, type: Type, listener: ChannelListeners[Type]): void;
+
+  /**
    * Sends the given message to all listeners on a channel with the given id.
    *
    * @param id The id of the channel to send the message on
@@ -38,31 +79,55 @@ export interface ChannelManager {
   send(id: string, message: ChannelMessage): void;
 
   /**
-   * Subscribe to messages on a channel with the given id.
+   * Closes the channel with the given id.
    *
-   * @param id The id of the channel to subscribe to
-   * @param listener The listener to subscribe with
+   * @param id The id of the channel to close
    */
-  subscribe(id: string, listener: ChannelListener): void;
-
-  /**
-   * Unsubscribe from messages on a channel with the given id.
-   *
-   * @param id The id of the channel to unsubscribe from
-   * @param listener The listener to unsubscribe
-   */
-  unsubscribe(id: string, listener: ChannelListener): void;
+  close(id: string): void;
 }
 
 // channel -------------------------------------------------------------------------------------------------------------
 
 /** A channel represents a means of communication between different scripts.  */
 export class Channel {
+  // channel state
+  private _state: ChannelState = 'open';
+
   // list of listeners
-  _listeners = new Set<ChannelListener>();
+  private _listeners: {
+    [key in keyof ChannelListeners]: Set<ChannelListeners[key]>;
+  } = {
+    message: new Set(),
+    close: new Set(),
+  };
 
   /** Constructs a new channel with the given id. */
   public constructor(public readonly id: string) {}
+
+  /** Channel state */
+  get state(): ChannelState {
+    return this._state;
+  }
+
+  /**
+   * Subscribe to events on this channel.
+   *
+   * @param type The type of event to subscribe to
+   * @param listener The listener to subscribe with
+   */
+  public on<Type extends ChannelEventType>(type: Type, listener: ChannelListeners[Type]): void {
+    this._listeners[type].add(listener);
+  }
+
+  /**
+   * Unsubscribe from events on this channel.
+   *
+   * @param type The type of event to unsubscribe from
+   * @param listener The listener to unsubscribe
+   */
+  public off<Type extends ChannelEventType>(id: string, type: Type, listener: ChannelListeners[Type]): void {
+    this._listeners[type].delete(listener);
+  }
 
   /**
    * Sends the given message to all listeners on this channel.
@@ -70,25 +135,20 @@ export class Channel {
    * @param message The message to send
    */
   public send(message: ChannelMessage): void {
-    this._listeners.forEach((listener) => listener(message));
+    invariant(this._state === 'open', 'Cannot send message on closed channel');
+    this._listeners.message.forEach((listener) => listener(message));
   }
 
-  /**
-   * Subscribe to messages on this channel.
-   *
-   * @param listener The listener to subscribe with
-   */
-  public subscribe(listener: ChannelListener): void {
-    this._listeners.add(listener);
-  }
+  /** Closes this channel. */
+  public close(): void {
+    // abort if already closed
+    if (this._state === 'closed') {
+      return;
+    }
 
-  /**
-   * Unsubscribe from messages on this channel.
-   *
-   * @param listener The listener to unsubscribe
-   */
-  public unsubscribe(listener: ChannelListener): void {
-    this._listeners.delete(listener);
+    // close channel & notify listeners
+    this._state = 'closed';
+    this._listeners.close.forEach((listener) => listener());
   }
 }
 
@@ -114,20 +174,28 @@ export function channelManagerFactory(): ChannelManager {
       return id;
     },
 
-    destroy(id: string) {
+    destroy(id) {
       channels.delete(id);
     },
 
-    send(id: string, message: ChannelMessage) {
+    isOpen(id) {
+      return getChannel(id).state === 'open';
+    },
+
+    on(id, type, listener) {
+      getChannel(id).on(type, listener);
+    },
+
+    off(id, type, listener) {
+      getChannel(id).off(id, type, listener);
+    },
+
+    send(id, message) {
       getChannel(id).send(message);
     },
 
-    subscribe(id: string, listener: ChannelListener) {
-      getChannel(id).subscribe(listener);
-    },
-
-    unsubscribe(id: string, listener: ChannelListener) {
-      getChannel(id).unsubscribe(listener);
+    close(id) {
+      getChannel(id).close();
     },
   };
 }
